@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>{{ app_name }}</title>
+<style>
+:root {
+  --bg: #f7f7f8;
+  --fg: #000;
+  --header-bg: #202124;
+  --header-fg: #fff;
+  --btn-bg: #ff3b30;
+  --btn-fg: #fff;
+}
+body.dark {
+  --bg: #121212;
+  --fg: #eee;
+  --header-bg: #000;
+  --header-fg: #fff;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+}
+.header {
+  background: var(--header-bg);
+  color: var(--header-fg);
+  padding: 12px 18px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.header a {
+  color: var(--header-fg);
+  text-decoration: none;
+  margin-right: 12px;
+}
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 16px;
+  background: var(--bg);
+  border-radius: 8px;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+}
+input,button {
+  padding: 8px;
+  margin: 6px 0;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+button {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: none;
+  cursor: pointer;
+}
+video {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 6px;
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <strong><a href="{{ url_for('index') }}">{{ app_name }}</a></strong>
+  <a href="{{ url_for('index') }}">Główna</a>
+  {% if current_user.is_authenticated %}
+    <a href="{{ url_for('upload') }}">Prześlij film</a>
+    <a href="{{ url_for('logout') }}">Wyloguj</a>
+  {% else %}
+    <a href="{{ url_for('login') }}">Zaloguj</a>
+    <a href="{{ url_for('register') }}">Rejestruj</a>
+  {% endif %}
+  <button id="toggle-theme" style="margin-left:auto;width:auto;">🌓</button>
+</div>
+<div class="container">
+  {% block content %}{% endblock %}
+</div>
+<script>
+function setTheme(dark) {
+  if(dark){
+    document.body.classList.add("dark");
+    localStorage.setItem("theme","dark");
+  } else {
+    document.body.classList.remove("dark");
+    localStorage.setItem("theme","light");
+  }
+}
+document.getElementById("toggle-theme").addEventListener("click",()=>{
+  setTheme(!document.body.classList.contains("dark"));
+});
+if(localStorage.getItem("theme")==="dark"){ setTheme(true); }
+</script>
+</body>
+</html>

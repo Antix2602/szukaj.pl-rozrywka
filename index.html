@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dostępne filmy</h2>
+<input type="text" id="search" placeholder="Szukaj filmu...">
+<ul id="video-list">
+  {% for v in videos %}
+  <li>
+    <a href="{{ url_for('video_page', video_id=v.id) }}">{{ v.title }}</a>
+    <div style="font-size:12px;color:gray">Dodane {{ v.created_at.strftime("%Y-%m-%d %H:%M") }}</div>
+  </li>
+  {% else %}
+  <li>Brak filmów – prześlij coś!</li>
+  {% endfor %}
+</ul>
+<script>
+const search = document.getElementById("search");
+const list = document.getElementById("video-list").getElementsByTagName("li");
+search.addEventListener("keyup",()=>{
+  const q = search.value.toLowerCase();
+  for(let li of list){
+    const txt = li.textContent.toLowerCase();
+    li.style.display = txt.includes(q) ? "" : "none";
+  }
+});
+</script>
+{% endblock %}
